@@ -1,0 +1,32 @@
+/**
+ * COUNTER JOURNAL DESIGN NOTE: Global styling applies warm paper, espresso
+ * ink, caramel actions, double rules, and editorial serif/sans hierarchy.
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+  --radius-sm: 0px; --radius-md: 0px; --radius-lg: 0px; --radius-xl: 0px;
+  --color-background: var(--background); --color-foreground: var(--foreground); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-popover: var(--popover); --color-popover-foreground: var(--popover-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-destructive-foreground: var(--destructive-foreground); --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring); --font-display: Georgia, "Times New Roman", serif; --font-sans: "Avenir Next", Avenir, "Segoe UI", Arial, sans-serif;
+}
+:root { --background: #faf6f1; --foreground: #3a2a1e; --card: #ffffff; --card-foreground: #3a2a1e; --popover: #ffffff; --popover-foreground: #3a2a1e; --primary: #3a2a1e; --primary-foreground: #faf6f1; --secondary: #e9e0d4; --secondary-foreground: #3a2a1e; --muted: #f3eee8; --muted-foreground: #645447; --accent: #c97b3d; --accent-foreground: #ffffff; --destructive: #b3452c; --destructive-foreground: #ffffff; --border: #d8ccbd; --input: #d8ccbd; --ring: #c97b3d; }
+@layer base { * { @apply border-border outline-ring/50; } html { scroll-behavior: smooth; } body { @apply bg-background text-foreground; font-family: var(--font-sans); } button:not(:disabled), [role="button"]:not([aria-disabled="true"]), [type="button"]:not(:disabled), [type="submit"]:not(:disabled), [type="reset"]:not(:disabled), a[href], select:not(:disabled), input:not(:disabled), textarea:not(:disabled) { @apply cursor-pointer; } ::selection { background: #c97b3d; color: #fff; } }
+@layer components {
+  .container { width: 100%; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
+  .flex { min-height: 0; min-width: 0; }
+  .font-display { font-family: var(--font-display); letter-spacing: -0.04em; }
+  .section-kicker { font-size: 0.64rem; font-weight: 800; letter-spacing: 0.17em; text-transform: uppercase; color: #645447; }
+  .footer-label { font-size: 0.64rem; font-weight: 800; letter-spacing: 0.17em; text-transform: uppercase; color: #eacba2; }
+  .nav-link { position: relative; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #3a2a1e; transition: color 160ms cubic-bezier(.23,1,.32,1); }
+  .nav-link::after { content: ""; position: absolute; bottom: -7px; left: 0; height: 1px; width: 100%; transform: scaleX(0); transform-origin: left; background: #c97b3d; transition: transform 180ms cubic-bezier(.23,1,.32,1); }
+  .nav-link:hover, .nav-link-active { color: #c97b3d; } .nav-link:hover::after, .nav-link-active::after { transform: scaleX(1); }
+  .menu-card { border-top: 3px double rgba(58,42,30,.75); transition: transform 220ms cubic-bezier(.23,1,.32,1), box-shadow 220ms cubic-bezier(.23,1,.32,1); } .menu-card:hover { transform: translateY(-5px); box-shadow: 0 22px 44px rgba(58,42,30,.12); }
+  .ticket-meta { display: flex; align-items: center; justify-content: space-between; gap: .75rem; border-bottom: 1px solid rgba(58,42,30,.15); background: #f3eee8; padding: .45rem .75rem; color: #645447; font-size: .57rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; } .ticket-dot { display: inline-block; height: .42rem; width: .42rem; margin-right: .25rem; border-radius: 999px; background: #c97b3d; vertical-align: middle; } .ticket-empty { overflow: hidden; border-top: 4px double #3a2a1e; background: #fff; box-shadow: 14px 14px 0 #e9e0d4; } .ticket-row { position: relative; border-top: 3px double rgba(58,42,30,.66); } .ticket-row::before { content: ""; position: absolute; top: 0; bottom: 0; left: .58rem; border-left: 1px dashed rgba(201,123,61,.35); } .ticket-row > * { position: relative; margin-left: .4rem; } .dashboard-margin-note { margin-top: .8rem; text-align: right; font-size: .61rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #645447; }
+  .allergen-pill { border: 1px solid rgba(179,69,44,.26); padding: .18rem .4rem; font-size: .61rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: #9d3f2e; } .tag-pill { border: 1px solid rgba(107,143,113,.35); padding: .18rem .4rem; font-size: .61rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: #45694b; }
+  .choice-button { border: 1px solid rgba(58,42,30,.2); background: #fff; padding: .7rem .55rem; font-size: .72rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: #3a2a1e; transition: background 160ms cubic-bezier(.23,1,.32,1), border-color 160ms cubic-bezier(.23,1,.32,1), color 160ms cubic-bezier(.23,1,.32,1); } .choice-button:hover { border-color: #c97b3d; } .choice-button-active { border-color: #c97b3d; background: #c97b3d; color: #fff; }
+  .field-label { font-size: .66rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #645447; } .field-control { width: 100%; border: 1px solid rgba(58,42,30,.25); background: #fff; padding: .75rem; color: #3a2a1e; font-size: .9rem; outline: none; transition: border-color 150ms ease, box-shadow 150ms ease; } .field-control:focus { border-color: #c97b3d; box-shadow: 0 0 0 3px rgba(201,123,61,.18); }
+}
+@media (min-width: 640px) { .container { padding-left: 1.5rem; padding-right: 1.5rem; } }
+@media (min-width: 1024px) { .container { max-width: 1280px; padding-left: 2rem; padding-right: 2rem; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
