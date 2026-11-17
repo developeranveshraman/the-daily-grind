@@ -1,325 +1,332 @@
-// app.js
-// The Daily Grind - Cafe Website
+"use strict";
 
 const API_URL = "/api/menu";
-
-const menuGrid = document.querySelector("#menu-grid");
-const filterButtons = document.querySelectorAll("[data-category]");
+const STATIC_MENU_URL = "menu/menu.json";
 
 let menuItems = [];
 
-/* =========================================================
-   1. FETCH MENU DATA
-   ========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const menuGrid = document.querySelector("#menu-grid");
+  const filterButtons = document.querySelectorAll("[data-category]");
 
-async function fetchMenu() {
-  try {
-    if (!menuGrid) return;
-
-    menuGrid.innerHTML = "<p>Loading menu...</p>";
-
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
-    }
-
-    menuItems = await response.json();
-    renderMenu(menuItems);
-  } catch (error) {
-    console.error("Could not load menu:", error);
-
-    if (menuGrid) {
-      menuGrid.innerHTML =
-        "<p>Sorry, we couldn't load the menu. Please try again later.</p>";
-    }
-  }
-}
-
-/* =========================================================
-   2. RENDER MENU CARDS
-   Expected API item:
-   {
-      id: 1,
-      name: "Cappuccino",
-      description: "Espresso with steamed milk",
-      price: 180,
-      category: "coffee",
-      image: "/images/cappuccino.jpg"
-   }
-   ========================================================= */
-
-function renderMenu(items) {
-  if (!menuGrid) return;
-
-  menuGrid.innerHTML = "";
-
-  if (!Array.isArray(items) || items.length === 0) {
-    menuGrid.innerHTML = "<p>No menu items found.</p>";
+  if (!menuGrid) {
+    console.error('Required element "#menu-grid" was not found.');
     return;
   }
 
-  items.forEach((item) => {
-    const card = document.createElement("article");
-    card.classList.add("menu-card");
-
-    // Image
-    if (item.image) {
-      const image = document.createElement("img");
-      image.src = item.image;
-      image.alt = item.name || "Cafe menu item";
-      image.loading = "lazy";
-
-      card.appendChild(image);
-    }
-
-    // Name
-    const name = document.createElement("h3");
-    name.textContent = item.name || "Unnamed Item";
-
-    // Description
-    const description = document.createElement("p");
-    description.classList.add("menu-description");
-    description.textContent = item.description || "";
-
-    // Price
-    const price = document.createElement("p");
-    price.classList.add("menu-price");
-
-    const numericPrice = Number(item.price);
-
-    price.textContent = Number.isFinite(numericPrice)
-      ? `₹${numericPrice.toFixed(2)}`
-      : "Price unavailable";
-
-    card.append(name, description, price);
-    menuGrid.appendChild(card);
-  });
-}
-
-/* =========================================================
-   3. FILTER MENU BY CATEGORY
-   Example HTML:
-
-   <button data-category="all">All</button>
-   <button data-category="coffee">Coffee</button>
-   <button data-category="tea">Tea</button>
-   <button data-category="food">Food</button>
-   ========================================================= */
-
-function filterMenu(category) {
-  if (category === "all") {
-    renderMenu(menuItems);
-    return;
+  function normalizeCategory(category) {
+    return String(category ?? "").trim().toLowerCase();
   }
 
-  const filteredItems = menuItems.filter(
-    (item) =>
-      String(item.category).toLowerCase() ===
-      String(category).toLowerCase()
-  );
+  function formatValue(value, fallback = "N/A") {
+    return value === null || value === undefined || value === ""
+      ? fallback
+      : String(value);
+  }
 
-  renderMenu(filteredItems);
-}
+  function createStarRating(rating) {
+    const numericRating = Math.max(
+      0,
+      Math.min(5, Number(rating) || 0)
+    );
 
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const category = button.dataset.category;
+    const fullStars = Math.round(numericRating);
 
-    filterMenu(category);
+    return `${"★".repeat(fullStars)}${"☆".repeat(5 - fullStars)}`;
+  }
 
-    // Update active button
-    filterButtons.forEach((btn) => {
-      btn.classList.remove("active");
+  function createImage(item) {
+    const image = document.createElement("img");
+
+    image.className = "menu-card__image";
+    image.src = item.image_path || "";
+    image.alt = item.name
+      ? `${item.name} - The Daily Grind`
+      : "The Daily Grind menu item";
+    image.loading = "lazy";
+    image.decoding = "async";
+
+    image.onerror = () => {
+      image.onerror = null;
+      image.removeAttribute("src");
+      image.classList.add("menu-card__image--unavailable");
+      image.alt = "Image unavailable";
+    };
+
+    return image;
+  }
+
+  function createReviews(reviews) {
+    const details = document.createElement("details");
+    details.className = "menu-card__reviews";
+
+    const summary = document.createElement("summary");
+
+    const reviewList = Array.isArray(reviews) ? reviews : [];
+
+    summary.textContent =
+      reviewList.length > 0
+        ? `Customer Reviews (${reviewList.length})`
+        : "Customer Reviews";
+
+    details.appendChild(summary);
+
+    if (reviewList.length === 0) {
+      const emptyMessage = document.createElement("p");
+      emptyMessage.textContent = "No reviews available.";
+      details.appendChild(emptyMessage);
+
+      return details;
+    }
+
+    const list = document.createElement("div");
+    list.className = "menu-card__review-list";
+
+    reviewList.forEach((review) => {
+      const reviewElement = document.createElement("article");
+      reviewElement.className = "menu-card__review";
+
+      const header = document.createElement("div");
+      header.className = "menu-card__review-header";
+
+      const customerName = document.createElement("strong");
+      customerName.className = "menu-card__review-name";
+      customerName.textContent = formatValue(
+        review?.customer_name,
+        "Anonymous"
+      );
+
+      const rating = document.createElement("span");
+      rating.className = "menu-card__review-rating";
+      rating.textContent = createStarRating(review?.rating);
+      rating.setAttribute(
+        "aria-label",
+        `${Number(review?.rating) || 0} out of 5 stars`
+      );
+
+      header.append(customerName, rating);
+
+      const comment = document.createElement("p");
+      comment.className = "menu-card__review-comment";
+      comment.textContent = formatValue(
+        review?.comment,
+        "No comment provided."
+      );
+
+      reviewElement.append(header, comment);
+      list.appendChild(reviewElement);
     });
 
-    button.classList.add("active");
-  });
-});
+    details.appendChild(list);
 
-/* =========================================================
-   4. CUSTOMER REVIEW / LOCAL STORAGE
-   ========================================================= */
-
-/**
- * Saves a customer review locally.
- *
- * Example:
- *
- * saveCustomerReview({
- *   fullName: "Rahul Sharma",
- *   email: "rahul@example.com",
- *   rating: 5,
- *   review: "Excellent coffee!",
- *   orderHistory: [
- *      { item: "Cappuccino", quantity: 2 },
- *      { item: "Croissant", quantity: 1 }
- *   ],
- *   consentToStore: true
- * });
- */
-
-function saveCustomerReview({
-  fullName,
-  email,
-  rating,
-  review,
-  orderHistory = [],
-  consentToStore = false
-}) {
-  // Validate required fields
-  if (!fullName?.trim()) {
-    throw new Error("Customer full name is required.");
+    return details;
   }
 
-  if (!isValidEmail(email)) {
-    throw new Error("Please enter a valid email address.");
-  }
+  function createMenuCard(item) {
+    const card = document.createElement("article");
+    card.className = "menu-card";
 
-  if (!consentToStore) {
-    throw new Error(
-      "Customer consent is required before storing personal information."
-    );
-  }
+    const image = createImage(item);
 
-  const reviewData = {
-    id: crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random()}`,
+    const content = document.createElement("div");
+    content.className = "menu-card__content";
 
-    fullName: fullName.trim(),
-    email: email.trim().toLowerCase(),
-
-    rating: Number(rating) || 0,
-    review: review?.trim() || "",
-
-    orderHistory: Array.isArray(orderHistory)
-      ? orderHistory
-      : [],
-
-    createdAt: new Date().toISOString()
-  };
-
-  const reviews = getCustomerReviews();
-
-  reviews.push(reviewData);
-
-  localStorage.setItem(
-    "dailyGrindCustomerReviews",
-    JSON.stringify(reviews)
-  );
-
-  return reviewData;
-}
-
-
-/* =========================================================
-   5. GET SAVED REVIEWS
-   ========================================================= */
-
-function getCustomerReviews() {
-  try {
-    const storedReviews = localStorage.getItem(
-      "dailyGrindCustomerReviews"
+    const category = document.createElement("span");
+    category.className = "menu-card__category";
+    category.textContent = formatValue(
+      item.category,
+      "Uncategorized"
     );
 
-    return storedReviews
-      ? JSON.parse(storedReviews)
-      : [];
-  } catch (error) {
-    console.error("Could not read customer reviews:", error);
-    return [];
+    const name = document.createElement("h3");
+    name.className = "menu-card__name";
+    name.textContent = formatValue(
+      item.name,
+      "Unnamed Item"
+    );
+
+    const description = document.createElement("p");
+    description.className = "menu-card__description";
+    description.textContent = formatValue(
+      item.description,
+      "No description available."
+    );
+
+    const priceContainer = document.createElement("div");
+    priceContainer.className = "menu-card__price-container";
+
+    const price = document.createElement("p");
+    price.className = "menu-card__price";
+
+    const totalPrice = Number(item.total_price_inr);
+
+    price.textContent = Number.isFinite(totalPrice)
+      ? `₹${Math.round(totalPrice)}`
+      : "Price unavailable";
+
+    const priceSubLabel = document.createElement("small");
+    priceSubLabel.className = "menu-card__price-meta";
+    priceSubLabel.textContent =
+      `Incl. 5% GST • FSSAI: ${formatValue(
+        item.fssai_food_category_code
+      )}`;
+
+    priceContainer.append(price, priceSubLabel);
+
+    const nutrition = item.nutritional_breakdown || {};
+
+    const nutritionSummary = document.createElement("p");
+    nutritionSummary.className = "menu-card__nutrition";
+
+    nutritionSummary.textContent =
+      `${formatValue(nutrition.total_calories)} kcal | ` +
+      `P: ${formatValue(nutrition.protein_g)}g • ` +
+      `C: ${formatValue(nutrition.carbs_g)}g • ` +
+      `F: ${formatValue(nutrition.fat_g)}g`;
+
+    const reviews = createReviews(item.customer_reviews);
+
+    content.append(
+      category,
+      name,
+      description,
+      priceContainer,
+      nutritionSummary,
+      reviews
+    );
+
+    card.append(image, content);
+
+    return card;
   }
-}
 
+  function renderMenu(items) {
+    menuGrid.replaceChildren();
 
-/* =========================================================
-   6. EMAIL VALIDATION
-   ========================================================= */
+    if (!Array.isArray(items) || items.length === 0) {
+      const message = document.createElement("p");
+      message.className = "menu-grid__message";
+      message.textContent = "No menu items found.";
 
-function isValidEmail(email) {
-  if (typeof email !== "string") {
-    return false;
+      menuGrid.appendChild(message);
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    items.forEach((item) => {
+      if (item && typeof item === "object") {
+        fragment.appendChild(createMenuCard(item));
+      }
+    });
+
+    menuGrid.appendChild(fragment);
   }
 
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-}
+  function filterMenu(category) {
+    const normalizedCategory = normalizeCategory(category);
 
+    if (normalizedCategory === "all") {
+      renderMenu(menuItems);
+      return;
+    }
 
-/* =========================================================
-   7. OPTIONAL REVIEW FORM HANDLER
+    const filteredItems = menuItems.filter(
+      (item) =>
+        normalizeCategory(item?.category) === normalizedCategory
+    );
 
-   Expected IDs:
+    renderMenu(filteredItems);
+  }
 
-   #review-form
-   #full-name
-   #email
-   #rating
-   #review
-   #storage-consent
-   #review-message
-   ========================================================= */
+  async function fetchJSON(url) {
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json"
+      }
+    });
 
-const reviewForm = document.querySelector("#review-form");
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch "${url}": HTTP ${response.status}`
+      );
+    }
 
-if (reviewForm) {
-  reviewForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+    return response.json();
+  }
 
-    const fullName =
-      document.querySelector("#full-name")?.value || "";
+  async function fetchMenu() {
+    menuGrid.replaceChildren();
 
-    const email =
-      document.querySelector("#email")?.value || "";
+    const loadingMessage = document.createElement("p");
+    loadingMessage.className = "menu-grid__message";
+    loadingMessage.textContent = "Loading menu...";
 
-    const rating =
-      document.querySelector("#rating")?.value || 0;
+    menuGrid.appendChild(loadingMessage);
 
-    const review =
-      document.querySelector("#review")?.value || "";
-
-    const consentToStore =
-      document.querySelector("#storage-consent")?.checked || false;
-
-    const message =
-      document.querySelector("#review-message");
+    let data;
 
     try {
-      saveCustomerReview({
-        fullName,
-        email,
-        rating,
-        review,
+      data = await fetchJSON(API_URL);
+    } catch (apiError) {
+      console.warn(
+        `Menu API unavailable. Falling back to "${STATIC_MENU_URL}".`,
+        apiError
+      );
 
-        // Replace this with the customer's real
-        // order data from your application.
-        orderHistory: [],
+      try {
+        data = await fetchJSON(STATIC_MENU_URL);
+      } catch (fallbackError) {
+        console.error(
+          "Unable to load menu from API or static fallback.",
+          fallbackError
+        );
 
-        consentToStore
+        menuGrid.replaceChildren();
+
+        const errorMessage = document.createElement("p");
+        errorMessage.className =
+          "menu-grid__message menu-grid__message--error";
+        errorMessage.textContent =
+          "Sorry, the menu is currently unavailable. Please try again later.";
+
+        menuGrid.appendChild(errorMessage);
+        return;
+      }
+    }
+
+    if (!Array.isArray(data)) {
+      console.error(
+        "Invalid menu data: expected the menu source to return an array."
+      );
+
+      menuItems = [];
+      renderMenu(menuItems);
+      return;
+    }
+
+    menuItems = data.filter(
+      (item) => item && typeof item === "object"
+    );
+
+    renderMenu(menuItems);
+  }
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.category;
+
+      filterButtons.forEach((filterButton) => {
+        filterButton.classList.remove("active");
+        filterButton.setAttribute("aria-pressed", "false");
       });
 
-      if (message) {
-        message.textContent =
-          "Thank you! Your review has been saved.";
-      }
+      button.classList.add("active");
+      button.setAttribute("aria-pressed", "true");
 
-      reviewForm.reset();
-
-    } catch (error) {
-      if (message) {
-        message.textContent = error.message;
-      }
-
-      console.error(error);
-    }
+      filterMenu(category);
+    });
   });
-}
 
-
-/* =========================================================
-   8. INITIALIZE WEBSITE
-   ========================================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
   fetchMenu();
 });
