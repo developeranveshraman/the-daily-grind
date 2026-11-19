@@ -1,0 +1,20 @@
+{
+  "hero_headline": "Your Bidholi basecamp for coffee, Pahadi food, and study fuel.",
+  "hero_subtext": "Fueling Bidholi's student life with craft coffee, affordable bites, and authentic Uttarakhand Pahadi comfort food.",
+  "about_us_story": "The Daily Grind wasn't born from a corporate boardroom; it emerged from the student energy of Bidholi. We recognized that university life demands more than just generic caffeine; it requires a welcoming space, affordable fuel, and a taste of home, right here in the Dehradun hills. We are a community hub designed for focused study sessions, quick breaks between classes, and casual hangouts with friends, offering a relaxed hillside vibe that fits the rhythm of student life.\n\nOur menu reflects this dual identity. We serve expertly crafted coffee to keep you sharp, alongside a unique selection of authentic Uttarakhand Pahadi comfort food. From hearty Gahat Dal Soup and Mandua Roti with Sisunak Saag to innovative twists like our Kandalee Ka Saag Sandwich and Bal Mithai Cheesecake, we bring the rich flavors of the Himalayas to your table. Whether you're fueling up for an exam or unwinding after a long day, The Daily Grind is your go-to spot for great taste, affordable prices, and genuine local hospitality.",
+  "synthetic_personas": [
+    {
+      "id": "SYNTH_STU_01",
+      "description": "An engineering student seeking affordable, convenient meals and a quiet space for long study sessions near campus."
+    },
+    {
+      "id": "SYNTH_STU_02",
+      "description": "A design student looking for a casual, inspiring atmosphere to collaborate on group projects and enjoy unique local flavors."
+    },
+    {
+      "id": "SYNTH_STU_03",
+      "description": "A faculty member desiring quality coffee and a comfortable environment for quick meetings or focused grading."
+    }
+  ]
+}
+```
