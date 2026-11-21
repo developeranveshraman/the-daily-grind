@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Grind | Coffee &amp; Pahadi Comfort Food — Bidholi, Dehradun</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main Navigation">
+      <a href="#hero-section" class="brand">
+        <img
+          id="app-logo"
+          src="assets/image/logo.webp"
+          alt="The Daily Grind Logo"
+          class="brand-logo"
+        />
+        <span class="brand-name">The Daily Grind</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#hero-section">Home</a></li>
+        <li><a href="#about-section">Our Story</a></li>
+        <li><a href="#menu-section">Menu</a></li>
+      </ul>
+
+      <a href="#menu-section" class="btn btn-primary">Explore Menu</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero-section" class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <span class="eyebrow">Bidholi, Dehradun &bull; Est. 2026</span>
+          <h1>Your Bidholi basecamp for coffee, Pahadi food, and study fuel.</h1>
+          <p>
+            Fueling Bidholi's student life with craft coffee, affordable bites,
+            and authentic Uttarakhand Pahadi comfort food.
+          </p>
+          <div class="hero-actions">
+            <a href="#menu-section" class="btn btn-primary">View Menu</a>
+            <a href="#about-section" class="btn btn-outline">Our Story</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-image-frame">
+            <img
+              src="assets/image/hero-banner.webp"
+              alt="The Daily Grind cafe in Bidholi, Dehradun serving craft coffee and Pahadi comfort food"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about-section" class="about">
+      <div class="container about-grid">
+        <div class="about-content">
+          <span class="eyebrow">About Us</span>
+          <h2>Crafted for Bidholi's student rhythm and hillside spirit.</h2>
+          <p>
+            The Daily Grind wasn't born from a corporate boardroom; it emerged
+            from the student energy of Bidholi. We recognized that university
+            life demands more than just generic caffeine; it requires a
+            welcoming space, affordable fuel, and a taste of home, right here in
+            the Dehradun hills. We are a community hub designed for focused
+            study sessions, quick breaks between classes, and casual hangouts
+            with friends, offering a relaxed hillside vibe that fits the rhythm
+            of student life.
+          </p>
+          <p>
+            Our menu reflects this dual identity. We serve expertly crafted
+            coffee to keep you sharp, alongside a unique selection of authentic
+            Uttarakhand Pahadi comfort food. From hearty Gahat Dal Soup and
+            Mandua Roti with Sisunak Saag to innovative twists like our Kandalee
+            Ka Saag Sandwich and Bal Mithai Cheesecake, we bring the rich
+            flavors of the Himalayas to your table. Whether you're fueling up
+            for an exam or unwinding after a long day, The Daily Grind is your
+            go-to spot for great taste, affordable prices, and genuine local
+            hospitality.
+          </p>
+        </div>
+
+        <div class="about-highlights-grid" aria-label="Cafe Highlights">
+          <article class="highlight-card">
+            <span class="highlight-label">Location</span>
+            <strong class="highlight-value">Bidholi, Dehradun</strong>
+            <p class="highlight-text">
+              Established in 2026 in the Dehradun hills as a welcoming student
+              community hub.
+            </p>
+          </article>
+
+          <article class="highlight-card">
+            <span class="highlight-label">Craft Fuel</span>
+            <strong class="highlight-value">Coffee &amp; Tea</strong>
+            <p class="highlight-text">
+              Expertly brewed cups built to keep you sharp through exam prep and
+              between-class breaks.
+            </p>
+          </article>
+
+          <article class="highlight-card">
+            <span class="highlight-label">Himalayan Kitchen</span>
+            <strong class="highlight-value">Pahadi Specials</strong>
+            <p class="highlight-text">
+              Authentic Uttarakhand comfort food from Gahat Dal Soup and Mandua
+              Roti to Bal Mithai Cheesecake.
+            </p>
+          </article>
+
+          <article class="highlight-card">
+            <span class="highlight-label">Atmosphere</span>
+            <strong class="highlight-value">Study &amp; Hangout</strong>
+            <p class="highlight-text">
+              A relaxed hillside space with affordable bites and genuine local
+              hospitality.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu & Category Filter Section -->
+    <section id="menu-section" class="menu-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Our Menu</span>
+          <h2>Crafted for Every Craving</h2>
+          <p>
+            Filter by category to explore our coffee, teas, fresh bakes, and
+            authentic Pahadi specials.
+          </p>
+        </div>
+
+        <!-- Category Filter Bar -->
+        <div
+          class="filter-bar"
+          role="group"
+          aria-label="Menu Category Filters"
+        >
+          <button
+            type="button"
+            class="filter-btn active"
+            data-category="All"
+            aria-pressed="true"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            data-category="Coffee"
+            aria-pressed="false"
+          >
+            Coffee
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            data-category="Tea"
+            aria-pressed="false"
+          >
+            Tea
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            data-category="Bakery"
+            aria-pressed="false"
+          >
+            Bakery
+          </button>
+          <button
+            type="button"
+            class="filter-btn"
+            data-category="Pahadi Specials"
+            aria-pressed="false"
+          >
+            Pahadi Specials
+          </button>
+        </div>
+
+        <!-- Dynamic Menu Grid Container -->
+        <div id="menu-grid" class="menu-grid" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 The Daily Grind. All rights reserved.</p>
+      <p>Bidholi, Dehradun, Uttarakhand &bull; Est. 2026</p>
+    </div>
+  </footer>
+</body>
+</html>
